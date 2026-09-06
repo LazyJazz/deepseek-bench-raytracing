@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(WORKSPACE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../workspace")
+set(EXTERNAL_DIR "${WORKSPACE_DIR}/external")
 set(CANDIDATE_BINARY "" CACHE FILEPATH "Path to the freshly built workspace renderer")
 if(NOT CANDIDATE_BINARY OR NOT EXISTS "${CANDIDATE_BINARY}")
   message(FATAL_ERROR "CANDIDATE_BINARY must point to a built workspace renderer")
