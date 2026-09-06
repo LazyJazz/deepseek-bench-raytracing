@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(REPOSITORY_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 set(WORKSPACE_DIR "${REPOSITORY_DIR}/workspace")
-set(EXTERNAL_DIR "${REPOSITORY_DIR}/external")
+set(EXTERNAL_DIR "${WORKSPACE_DIR}/external")
 file(GLOB_RECURSE CANDIDATE_SOURCES CONFIGURE_DEPENDS "${WORKSPACE_DIR}/src/*.cpp")
 if(NOT CANDIDATE_SOURCES)
   message(FATAL_ERROR "No candidate .cpp files found under workspace/src")

@@ -1,28 +1,23 @@
 # Task 1 — JSON Scene CPU Ray Tracer
 
-从零实现一个读取 JSON 场景并输出 PNG 的纯 C++17 CPU ray tracer。评测只检查最终图片；
-`workspace/` 中不提供渲染基础代码。可以在 `workspace/src/` 和 `workspace/include/` 下创建任意
-数量的 `.cpp`、`.h` 文件，但程序必须且只能定义一个 `main`。
+从零实现一个读取 JSON 场景并输出 PNG 的纯 C++17 CPU ray tracer。只检查最终图片；本目录
+不提供渲染基础代码。可以在 `src/` 和 `include/` 下创建任意数量的 `.cpp`、`.h` 文件，
+但程序必须且只能定义一个 `main`。
 
 ## 编译与运行约定
 
-评测从 `eval/` 运行：
+构建程序会递归收集 `src/` 下的所有 `.cpp` 文件，将它们一次性编译并链接成
+`raytracer_submission`，固定使用 C++17 且关闭编译器扩展。程序不能依赖自定义构建脚本；
+目录中的 `CMakeLists.txt`、Makefile 等文件不会被读取。编译时提供以下 include 路径：
 
-```bash
-python3 test_by_code.py
-```
-
-可信测试 CMake 会递归收集 `workspace/src/*.cpp`，将它们编译成
-`raytracer_submission`，固定使用 C++17。评测不会读取 `workspace/CMakeLists.txt`。
-编译时提供以下 include 路径：
-
-- `workspace/include`
+- `include`
 - `external/glm`
 - `external/stb`
 - `external/json/include`
 
 因此可以直接使用 `<glm/glm.hpp>`、`<stb_image_write.h>` 和
-`<nlohmann/json.hpp>`。不能依赖网络、GPU、窗口系统或以上目录之外的第三方库。
+`<nlohmann/json.hpp>`。依赖文件已经完整提供在本目录中。不能依赖网络、GPU、窗口系统、
+预安装的非标准库或本目录之外的文件。
 
 可执行程序必须支持：
 
@@ -30,8 +25,9 @@ python3 test_by_code.py
 raytracer_submission <scene.json> <output.png>
 ```
 
-成功时返回 0，并在指定路径写出尺寸正确的 8-bit RGBA PNG；失败时返回非零值。每个测试
-场景都在独立进程中运行，工作目录和输出文件名不固定。
+成功时返回 0，并在指定路径写出尺寸正确的 8-bit RGBA PNG；失败时返回非零值。输入路径、
+输出路径、工作目录均不固定，不能根据文件名或工作目录选择预制结果。程序必须完整读取传入
+的场景文件，并允许覆盖已经存在的输出文件。
 
 ## 坐标与射线定义
 
@@ -47,7 +43,7 @@ raytracer_submission <scene.json> <output.png>
 ## JSON 场景标准（version 1）
 
 所有数组均按 `[x,y,z]` 排列，颜色使用线性 RGB，数值以单精度浮点计算。未知字段应忽略。
-测试文件位于 `test_files/data/scenes/`。
+输入场景均遵守以下格式。
 
 ```json
 {
@@ -109,5 +105,5 @@ albedo * (ambient + sum(power / distance^2 * max(dot(normal,to_light),0)))
 
 ## 评测
 
-每个 JSON 场景只比较候选程序输出的 PNG 与对应参考 PNG。比较允许少量浮点和边缘栅格差异，
-但不会调用或检查任何内部求交、着色函数。参考图片位于 `test_files/data/reference/`。
+每个 JSON 场景只比较程序输出的 PNG 与参考图片。比较允许少量浮点和边缘像素差异，不会调用、
+链接或检查任何内部求交、着色函数。编译成功本身不构成功能得分。

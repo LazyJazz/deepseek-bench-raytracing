@@ -1,9 +1,9 @@
 [submodule "external/glm"]
-	path = external/glm
+	path = workspace/external/glm
 	url = https://github.com/g-truc/glm.git
 [submodule "external/stb"]
-	path = external/stb
+	path = workspace/external/stb
 	url = https://github.com/nothings/stb.git
 [submodule "external/json"]
-	path = external/json
+	path = workspace/external/json
 	url = https://github.com/nlohmann/json.git

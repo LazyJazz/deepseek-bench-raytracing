@@ -4,5 +4,5 @@
   "language": "C++17",
   "instructions": "README.md",
   "editable_directories": ["src", "include"],
-  "external_dependencies": ["../external/glm", "../external/stb", "../external/json"]
+  "external_dependencies": ["external/glm", "external/stb", "external/json"]
 }
