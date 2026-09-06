@@ -1,0 +1,6 @@
+/eval/code_result.json
+/eval/task-1-raytracing/
+/eval/build-*/
+/local_output/
+*.DS_Store
+__pycache__/

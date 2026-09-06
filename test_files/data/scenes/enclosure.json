@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "image": {"width": 480, "height": 270, "samples_per_axis": 4},
+  "camera": {
+    "eye": [10, 5, 10], "target": [0, 1, 0], "up": [0, 1, 0],
+    "vertical_fov_degrees": 40
+  },
+  "render": {"max_bounces": 8, "ray_epsilon": 0.001},
+  "ambient": [0.3, 0.3, 0.3],
+  "materials": {
+    "shell": {"type": "lambertian", "albedo": [0.6, 0.7, 0.8]},
+    "green": {"type": "lambertian", "albedo": [0.2001, 0.5, 0.18]},
+    "purple": {"type": "lambertian", "albedo": [0.8, 0.4, 0.8]},
+    "cyan": {"type": "lambertian", "albedo": [0.4, 0.8, 0.8]},
+    "yellow": {"type": "lambertian", "albedo": [0.8, 0.8, 0.4]},
+    "mirror": {"type": "specular", "albedo": [0.8, 0.8, 0.8]},
+    "floor": {"type": "lambertian", "albedo": [0.8, 0.8, 0.8]}
+  },
+  "spheres": [
+    {"center": [0, 0, 0], "radius": 1000, "material": "shell"},
+    {"center": [0, 0, 0], "radius": 3000, "material": "shell"},
+    {"center": [0, 2, 0], "radius": 2, "material": "green"},
+    {"center": [2, 1.6, 3], "radius": 1.6, "material": "purple"},
+    {"center": [-4, 1, 3], "radius": 1, "material": "mirror"},
+    {"center": [3.5, 1.4, -2.5], "radius": 1.4, "material": "mirror"},
+    {"center": [-1.5, 1.2, -4.5], "radius": 1.2, "material": "cyan"},
+    {"center": [-5.5, 3, -1.5], "radius": 3, "material": "mirror"},
+    {"center": [-3.5, 2.5, -12.5], "radius": 2.5, "material": "yellow"}
+  ],
+  "triangles": [
+    {"vertices": [[-100, 0, -100], [100, 0, -100], [-100, 0, 100]], "material": "floor"},
+    {"vertices": [[100, 0, 100], [100, 0, -100], [-100, 0, 100]], "material": "floor"}
+  ],
+  "lights": [
+    {"position": [0, 334.2516, 835.6290], "power": [700000, 700000, 700000]}
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "image": {"width": 320, "height": 240, "samples_per_axis": 2},
+  "camera": {
+    "eye": [6, 4, 8], "target": [0, 1, 0], "up": [0, 1, 0],
+    "vertical_fov_degrees": 42
+  },
+  "render": {"max_bounces": 6, "ray_epsilon": 0.001},
+  "ambient": [0.08, 0.09, 0.12],
+  "materials": {
+    "ground": {"type": "lambertian", "albedo": [0.75, 0.75, 0.75]},
+    "red": {"type": "lambertian", "albedo": [0.8, 0.16, 0.12]},
+    "green": {"type": "lambertian", "albedo": [0.15, 0.72, 0.25]},
+    "blue": {"type": "lambertian", "albedo": [0.18, 0.3, 0.85]}
+  },
+  "spheres": [
+    {"center": [-1.7, 1.0, 0.2], "radius": 1.0, "material": "red"},
+    {"center": [1.1, 0.7, -0.8], "radius": 0.7, "material": "blue"}
+  ],
+  "triangles": [
+    {"vertices": [[-12, 0, -12], [12, 0, -12], [-12, 0, 12]], "material": "ground"},
+    {"vertices": [[12, 0, 12], [12, 0, -12], [-12, 0, 12]], "material": "ground"},
+    {"vertices": [[0.2, 0, 1.2], [2.7, 0, 1.5], [1.3, 3.0, 0.8]], "material": "green"}
+  ],
+  "lights": [
+    {"position": [4, 8, 5], "power": [420, 390, 360]},
+    {"position": [-5, 4, 1], "power": [90, 110, 150]}
+  ]
+}

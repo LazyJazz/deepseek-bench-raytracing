@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "image": {"width": 400, "height": 300, "samples_per_axis": 3},
+  "camera": {
+    "eye": [7, 4.5, 9], "target": [0, 1.2, 0], "up": [0, 1, 0],
+    "vertical_fov_degrees": 38
+  },
+  "render": {"max_bounces": 8, "ray_epsilon": 0.001},
+  "ambient": [0.12, 0.14, 0.18],
+  "materials": {
+    "floor": {"type": "lambertian", "albedo": [0.72, 0.72, 0.72]},
+    "gold": {"type": "lambertian", "albedo": [0.82, 0.48, 0.12]},
+    "cyan": {"type": "lambertian", "albedo": [0.12, 0.72, 0.78]},
+    "mirror": {"type": "specular", "albedo": [0.86, 0.9, 0.96]},
+    "dark_mirror": {"type": "specular", "albedo": [0.5, 0.56, 0.65]}
+  },
+  "spheres": [
+    {"center": [-1.5, 1.25, 0], "radius": 1.25, "material": "mirror"},
+    {"center": [1.6, 0.9, 0.5], "radius": 0.9, "material": "gold"},
+    {"center": [0.5, 0.65, -2.2], "radius": 0.65, "material": "cyan"},
+    {"center": [-3.0, 0.65, -2.0], "radius": 0.65, "material": "dark_mirror"}
+  ],
+  "triangles": [
+    {"vertices": [[-15, 0, -15], [15, 0, -15], [-15, 0, 15]], "material": "floor"},
+    {"vertices": [[15, 0, 15], [15, 0, -15], [-15, 0, 15]], "material": "floor"}
+  ],
+  "lights": [
+    {"position": [2, 9, 5], "power": [620, 580, 520]},
+    {"position": [-6, 5, -1], "power": [180, 210, 280]}
+  ]
+}
