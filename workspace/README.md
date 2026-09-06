@@ -6,9 +6,9 @@
 
 ## 编译与运行约定
 
-构建程序会递归收集 `src/` 下的所有 `.cpp` 文件，将它们一次性编译并链接成
-`raytracer_submission`，固定使用 C++17 且关闭编译器扩展。程序不能依赖自定义构建脚本；
-目录中的 `CMakeLists.txt`、Makefile 等文件不会被读取。编译时提供以下 include 路径：
+构建程序使用本目录中的 `CMakeLists.txt`，递归收集 `src/` 下的所有 `.cpp` 文件，将它们一次性
+编译并链接成 `raytracer_submission`，固定使用 C++17 且关闭编译器扩展。编译器会提供以下
+include 路径：
 
 - `include`
 - `external/glm`
@@ -43,7 +43,8 @@ raytracer_submission <scene.json> <output.png>
 ## JSON 场景标准（version 1）
 
 所有数组均按 `[x,y,z]` 排列，颜色使用线性 RGB，数值以单精度浮点计算。未知字段应忽略。
-输入场景均遵守以下格式。
+输入场景均遵守以下格式。场景文件放在本目录的 `scenes/` 中；对应的参考图片放在
+`reference/` 中。程序运行时会收到场景文件的实际路径。
 
 ```json
 {
@@ -105,5 +106,5 @@ albedo * (ambient + sum(power / distance^2 * max(dot(normal,to_light),0)))
 
 ## 评测
 
-每个 JSON 场景只比较程序输出的 PNG 与参考图片。比较允许少量浮点和边缘像素差异，不会调用、
-链接或检查任何内部求交、着色函数。编译成功本身不构成功能得分。
+每个 JSON 场景只比较程序输出的 PNG 与 `reference/` 中的参考图片。比较允许少量浮点和边缘
+像素差异，不会调用、链接或检查任何内部求交、着色函数。编译成功本身不构成功能得分。

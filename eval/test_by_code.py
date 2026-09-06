@@ -73,26 +73,39 @@ def ctest_statuses(build_dir, expected):
     return statuses
 
 
-def evaluate(eval_dir, data_dir, config):
+def evaluate(eval_dir, workspace_dir, data_dir, config):
     logs = eval_dir / "task-1-raytracing"
     logs.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="build-raytracing-", dir=eval_dir) as temporary:
-        build = Path(temporary)
-        code = run(["cmake", "-S", str(data_dir), "-B", str(build),
-                    "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_TESTING=ON"],
-                   data_dir, logs / "configure.log", config["configure_timeout_seconds"])
+        root_build = Path(temporary)
+        workspace_build = root_build / "workspace"
+        test_build = root_build / "tests"
+        code = run(["cmake", "-S", str(workspace_dir), "-B", str(workspace_build),
+                    "-DCMAKE_BUILD_TYPE=Release"],
+                   workspace_dir, logs / "configure-workspace.log", config["configure_timeout_seconds"])
         if code:
-            raise EvaluationError("configure failed (see eval/task-1-raytracing/configure.log)")
-        code = run(["cmake", "--build", str(build), "--config", "Release", "--parallel", "2"],
-                   data_dir, logs / "build.log", config["build_timeout_seconds"])
+            raise EvaluationError("workspace configure failed (see eval/task-1-raytracing/configure-workspace.log)")
+        code = run(["cmake", "--build", str(workspace_build), "--config", "Release", "--parallel", "2"],
+                   workspace_dir, logs / "build-workspace.log", config["build_timeout_seconds"])
         if code:
-            raise EvaluationError("build failed (see eval/task-1-raytracing/build.log)")
-        code = run(["ctest", "--test-dir", str(build), "-C", "Release", "-T", "Test",
+            raise EvaluationError("workspace build failed (see eval/task-1-raytracing/build-workspace.log)")
+        candidate = workspace_build / "raytracer_submission"
+        code = run(["cmake", "-S", str(data_dir), "-B", str(test_build),
+                    "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_TESTING=ON",
+                    "-DCANDIDATE_BINARY=" + str(candidate)],
+                   data_dir, logs / "configure-tests.log", config["configure_timeout_seconds"])
+        if code:
+            raise EvaluationError("test configure failed (see eval/task-1-raytracing/configure-tests.log)")
+        code = run(["cmake", "--build", str(test_build), "--config", "Release", "--parallel", "2"],
+                   data_dir, logs / "build-tests.log", config["build_timeout_seconds"])
+        if code:
+            raise EvaluationError("test build failed (see eval/task-1-raytracing/build-tests.log)")
+        code = run(["ctest", "--test-dir", str(test_build), "-C", "Release", "-T", "Test",
                     "--no-compress-output", "--output-on-failure", "--parallel", "1"],
                    data_dir, logs / "test.log", len(config["groups"]) * 130)
         if code not in (0, 8):
             raise EvaluationError("CTest failed with code {}".format(code))
-        statuses = ctest_statuses(build, config["groups"])
+        statuses = ctest_statuses(test_build, config["groups"])
         if (code == 0) != all(statuses.values()):
             raise EvaluationError("CTest status disagreement")
         return statuses
@@ -101,6 +114,7 @@ def evaluate(eval_dir, data_dir, config):
 def main():
     eval_dir = Path.cwd().resolve()
     data_dir = eval_dir.parent / "test_files" / "data"
+    workspace_dir = eval_dir.parent / "workspace"
     result_path = eval_dir / "code_result.json"
     result = {"resolved": False, "score": 0.0, "reason": "evaluation did not complete"}
     try:
@@ -113,7 +127,7 @@ def main():
         threshold = config["resolved_threshold"]
         if isinstance(threshold, bool) or not isinstance(threshold, (int, float)) or not 0 < threshold <= 1:
             raise EvaluationError("invalid resolved threshold")
-        statuses = evaluate(eval_dir, data_dir, config)
+        statuses = evaluate(eval_dir, workspace_dir, data_dir, config)
         score = round(sum(weights[name] for name, passed in statuses.items() if passed) /
                       sum(weights.values()), 6)
         failed = [name for name, passed in statuses.items() if not passed]
