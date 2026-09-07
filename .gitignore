@@ -1,4 +1,5 @@
 /build/
+/workspace/build/
 /origin/
 *.png
 *.log

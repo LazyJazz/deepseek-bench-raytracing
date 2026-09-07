@@ -8,7 +8,8 @@
 using namespace long_march;
 
 int main(int argc, char **argv) {
-  const std::string output_path = argc > 1 ? argv[1] : "raytracing_result.png";
+  const std::string output_path =
+      argc > 1 ? argv[1] : "workspace/build/raytracing_result.png";
   const int width = argc > 2 ? std::stoi(argv[2]) : 1280;
   const int height = argc > 3 ? std::stoi(argv[3]) : 720;
   if (width <= 0 || height <= 0) {

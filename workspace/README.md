@@ -17,10 +17,10 @@
 
 ```bash
 git submodule update --init --recursive
-cmake -S workspace -B build \
+cmake -S workspace -B workspace/build \
   -DVCPKG_PATH=/path/to/vcpkg \
   -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release --parallel
+cmake --build workspace/build --config Release --parallel
 ```
 
 `VCPKG_PATH` 中应能解析 LongMarch 所需的 `fmt`、`freetype`、`eigen3`、`glfw3`、`glm`、
@@ -30,10 +30,10 @@ cmake --build build --config Release --parallel
 ## 运行
 
 ```bash
-./build/simple_raytracer [output.png] [width] [height]
+./workspace/build/src/simple_raytracer [output.png] [width] [height]
 ```
 
-所有参数均可省略，默认输出 `raytracing_result.png`，分辨率为 `1280×720`。程序不创建窗口，
+所有参数均可省略，默认输出 `workspace/build/raytracing_result.png`，分辨率为 `1280×720`。程序不创建窗口，
 启动后执行一帧 GPU 渲染，等待 GPU 完成后退出。
 
 ## 渲染约定
