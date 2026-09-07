@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-import os
+import shutil
 import struct
 import subprocess
 import sys
@@ -88,11 +88,26 @@ def write_result(resolved: bool, score: float, reason: str) -> int:
 
 def main() -> int:
     try:
-        vcpkg = os.environ.get("VCPKG_PATH")
-        if not vcpkg:
-            return write_result(False, 0.0, "VCPKG_PATH is not set")
         BUILD.mkdir(parents=True, exist_ok=True)
-        run(["cmake", "-S", str(WORKSPACE), "-B", str(BUILD), f"-DVCPKG_PATH={vcpkg}", "-DCMAKE_BUILD_TYPE=Release"])
+        # A pre-existing build directory may contain a cache generated with a
+        # different toolchain. Reset only that incompatible CMake cache; all
+        # compatible object files remain available for incremental builds.
+        expected_toolchain = (WORKSPACE / "external" / "vcpkg" / "scripts" /
+                              "buildsystems" / "vcpkg.cmake").resolve()
+        cache = BUILD / "CMakeCache.txt"
+        if cache.exists():
+            cached_toolchain = None
+            for line in cache.read_text(errors="ignore").splitlines():
+                if line.startswith("CMAKE_TOOLCHAIN_FILE:FILEPATH="):
+                    cached_toolchain = Path(line.split("=", 1)[1]).resolve()
+                    break
+            system_files = list((BUILD / "CMakeFiles").glob("*/CMakeSystem.cmake"))
+            stale_system = any(str(expected_toolchain) not in system.read_text(errors="ignore")
+                               for system in system_files)
+            if cached_toolchain != expected_toolchain or stale_system:
+                cache.unlink()
+                shutil.rmtree(BUILD / "CMakeFiles", ignore_errors=True)
+        run(["cmake", "-S", str(WORKSPACE), "-B", str(BUILD), "-DCMAKE_BUILD_TYPE=Release"])
         run(["cmake", "--build", str(BUILD), "--config", "Release", "--parallel"])
         executable = BUILD / "src" / "simple_raytracer"
         if not executable.exists():

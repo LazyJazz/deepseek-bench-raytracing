@@ -4,15 +4,28 @@ set(LONGMARCH_DISABLE_CUDA ON CACHE BOOL "Build LongMarch without CUDA")
 set(LONGMARCH_DISABLE_PYTHON ON CACHE BOOL "Do not build LongMarch Python bindings")
 set(LONGMARCH_NO_DEMO ON CACHE BOOL "Do not build LongMarch demos")
 
-if(NOT DEFINED VCPKG_PATH)
-  message(FATAL_ERROR "Set VCPKG_PATH to a vcpkg checkout containing LongMarch dependencies")
+set(VCPKG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/vcpkg"
+    CACHE PATH "vcpkg checkout used for LongMarch dependencies" FORCE)
+if(NOT EXISTS "${VCPKG_PATH}/vcpkg")
+  if(UNIX)
+    execute_process(
+      COMMAND "${VCPKG_PATH}/bootstrap-vcpkg.sh" -disableMetrics
+      WORKING_DIRECTORY "${VCPKG_PATH}")
+  elseif(WIN32)
+    execute_process(
+      COMMAND "${VCPKG_PATH}/bootstrap-vcpkg.bat"
+      WORKING_DIRECTORY "${VCPKG_PATH}")
+  endif()
+endif()
+if(NOT EXISTS "${VCPKG_PATH}/vcpkg")
+  message(FATAL_ERROR "Unable to bootstrap vcpkg under ${VCPKG_PATH}")
 endif()
 set(CMAKE_TOOLCHAIN_FILE "${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake"
-    CACHE FILEPATH "vcpkg toolchain file")
+    CACHE FILEPATH "vcpkg toolchain file" FORCE)
 set(VCPKG_MANIFEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/LongMarch"
-    CACHE PATH "LongMarch vcpkg manifest directory")
+    CACHE PATH "LongMarch vcpkg manifest directory" FORCE)
 set(VCPKG_INSTALLED_DIR "${VCPKG_MANIFEST_DIR}/vcpkg_installed"
-    CACHE PATH "vcpkg installation directory")
+    CACHE PATH "vcpkg installation directory" FORCE)
 
 project(simple_raytracer LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)

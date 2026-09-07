@@ -7,3 +7,6 @@
 [submodule "workspace/external/LongMarch"]
 	path = workspace/external/LongMarch
 	url = https://github.com/LazyJazzDev/LongMarch.git
+[submodule "workspace/external/vcpkg"]
+	path = workspace/external/vcpkg
+	url = https://github.com/microsoft/vcpkg.git

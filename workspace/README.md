@@ -8,6 +8,7 @@
 - `src/main.cpp`：创建示例场景并启动单帧命令行渲染；
 - `src/`：场景数据结构、GPU 资源绑定和完成的 Ray Tracing shader；
 - `external/LongMarch/`：图形框架；
+- `external/vcpkg/`：用于安装 LongMarch 构建依赖的包管理器；
 - `external/glm/`、`external/stb/`：数学和 PNG 输出依赖。
 
 ## 构建
@@ -18,7 +19,6 @@
 ```bash
 git submodule update --init --recursive
 cmake -S workspace -B workspace/build \
-  -DVCPKG_PATH=/path/to/vcpkg \
   -DCMAKE_BUILD_TYPE=Release
 cmake --build workspace/build --config Release --parallel
 ```
