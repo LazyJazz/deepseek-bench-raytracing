@@ -18,6 +18,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_subdirectory(external/LongMarch "${CMAKE_BINARY_DIR}/longmarch")
 add_subdirectory(lib)
 
-add_executable(simple_raytracer gui/main.cpp)
+add_executable(simple_raytracer cli/main.cpp)
 target_include_directories(simple_raytracer PRIVATE lib)
 target_link_libraries(simple_raytracer PRIVATE raytracing_lib)

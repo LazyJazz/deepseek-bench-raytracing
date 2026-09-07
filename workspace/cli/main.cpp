@@ -1,10 +1,20 @@
+#include <iostream>
+#include <string>
+
 #include "glm/glm.hpp"
 #include "raytracing_lib.h"
 #include "scene_viewer.h"
 
 using namespace long_march;
 
-int main() {
+int main(int argc, char **argv) {
+  const std::string output_path = argc > 1 ? argv[1] : "raytracing_result.png";
+  const int width = argc > 2 ? std::stoi(argv[2]) : 1280;
+  const int height = argc > 3 ? std::stoi(argv[3]) : 720;
+  if (width <= 0 || height <= 0) {
+    std::cerr << "usage: simple_raytracer [output.png] [width] [height]\n";
+    return 2;
+  }
   SceneSettings scene_settings;
   Scene scene;
   scene.AddSphere({{0.0f, 0.0f, 0.0f}, 1e3f},
@@ -41,6 +51,7 @@ int main() {
   scene_settings.camera_position = glm::vec3{10.0f, 5.0f, 10.0f};
   scene_settings.look_at = glm::vec3{0.0f, 1.0f, 0.0f};
   scene.SetSceneSettings(scene_settings);
-  SceneViewer scene_viewer(&scene, "Ray Tracing Demo", 1280, 720, false);
+  SceneViewer scene_viewer(&scene, "Ray Tracing CLI", width, height, true,
+                           output_path);
   scene_viewer.Run();
 }

@@ -11,12 +11,14 @@ SceneViewer::SceneViewer(Scene *scene,
                          const std::string &name,
                          int width,
                          int height,
-                         bool headless)
+                         bool headless,
+                         const std::string &output_path)
     : name_(name),
       scene_(scene),
       width_(width),
       height_(height),
-      headless_(headless) {
+      headless_(headless),
+      output_path_(output_path) {
   graphics::CreateCore(graphics::BACKEND_API_DEFAULT, {}, &core_);
   core_->InitializeLogicalDeviceAutoSelect(false);
 
@@ -37,11 +39,6 @@ void SceneViewer::Run() {
   } else {
     OnUpdate();
     OnRender();
-    // For headless mode, save the result
-    std::vector<uint32_t> pixels(width_ * height_);
-    color_image_->DownloadData(pixels.data());
-    stbi_write_png("raytracing.png", width_, height_, 4, pixels.data(),
-                   width_ * sizeof(uint32_t));
   }
 
   OnClose();
@@ -148,7 +145,7 @@ void SceneViewer::OnClose() {
   core_->WaitGPU();
   std::vector<uint32_t> pixels(width_ * height_);
   color_image_->DownloadData(pixels.data());
-  stbi_write_png("raytracing_result.png", width_, height_, 4, pixels.data(),
+  stbi_write_png(output_path_.c_str(), width_, height_, 4, pixels.data(),
                  width_ * sizeof(uint32_t));
 }
 

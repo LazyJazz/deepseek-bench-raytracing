@@ -15,7 +15,8 @@ class SceneViewer {
               const std::string &name,
               int width,
               int height,
-              bool headless);
+              bool headless,
+              const std::string &output_path = "raytracing_result.png");
   void Run();
 
  private:
@@ -46,4 +47,5 @@ class SceneViewer {
   bool headless_;
 
   std::string name_;
+  std::string output_path_;
 };

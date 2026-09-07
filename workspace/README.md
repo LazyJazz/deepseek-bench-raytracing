@@ -5,7 +5,7 @@
 
 项目内容：
 
-- `gui/main.cpp`：创建示例场景并启动渲染窗口；
+- `cli/main.cpp`：创建示例场景并启动单帧命令行渲染；
 - `lib/`：场景数据结构、GPU 资源绑定和完成的 Ray Tracing shader；
 - `external/LongMarch/`：图形框架；
 - `external/glm/`、`external/stb/`：数学和 PNG 输出依赖。
@@ -30,12 +30,11 @@ cmake --build build --config Release --parallel
 ## 运行
 
 ```bash
-./build/simple_raytracer
+./build/simple_raytracer [output.png] [width] [height]
 ```
 
-程序默认打开 `1280×720` 窗口。按住鼠标左键旋转视角，W/A/S/D 移动，空格和左 Ctrl 沿垂直
-方向移动。关闭窗口后退出；渲染器也会把最后一帧保存为当前目录下的
-`raytracing_result.png`。
+所有参数均可省略，默认输出 `raytracing_result.png`，分辨率为 `1280×720`。程序不创建窗口，
+启动后执行一帧 GPU 渲染，等待 GPU 完成后退出。
 
 ## 渲染约定
 
