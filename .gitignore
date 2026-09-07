@@ -1,5 +1,7 @@
 /build/
 /workspace/build/
+/eval/build/
+/eval/code_result.json
 /origin/
 *.png
 *.log
