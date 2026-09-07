@@ -1,8 +1,0 @@
-{
-  "id": "task-1-raytracing",
-  "name": "task-1-raytracing",
-  "language": "C++17",
-  "instructions": "README.md",
-  "editable_directories": ["src", "include"],
-  "external_dependencies": ["external/glm", "external/stb", "external/json"]
-}

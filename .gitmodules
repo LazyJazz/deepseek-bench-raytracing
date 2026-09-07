@@ -1,6 +1,9 @@
-[submodule "external/glm"]
+[submodule "workspace/external/glm"]
 	path = workspace/external/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "external/stb"]
+[submodule "workspace/external/stb"]
 	path = workspace/external/stb
 	url = https://github.com/nothings/stb.git
+[submodule "workspace/external/LongMarch"]
+	path = workspace/external/LongMarch
+	url = https://github.com/LazyJazzDev/LongMarch.git
