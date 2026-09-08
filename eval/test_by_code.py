@@ -82,12 +82,17 @@ def read_png(path: Path) -> tuple[int, int, bytes]:
 
 
 def write_result(resolved: bool, score: float, reason: str) -> int:
+    RESULT.parent.mkdir(parents=True, exist_ok=True)
     RESULT.write_text(json.dumps({"resolved": resolved, "score": score, "reason": reason}, ensure_ascii=False) + "\n")
     return 0 if resolved else 1
 
 
 def main() -> int:
     try:
+        # Replace any result left by an earlier invocation before doing work.
+        # This guarantees that a later configure/build failure cannot leave a
+        # stale successful result behind.
+        write_result(False, 0.0, "test did not complete")
         BUILD.mkdir(parents=True, exist_ok=True)
         # A pre-existing build directory may contain a cache generated with a
         # different toolchain. Reset only that incompatible CMake cache; all
@@ -135,9 +140,20 @@ def main() -> int:
                                 f"image match rate {match_rate:.4f} is below 0.99")
         return write_result(True, round(match_rate, 4),
                             "build, render, and image comparison passed")
-    except (subprocess.CalledProcessError, OSError, ValueError) as exc:
+    except Exception as exc:
         return write_result(False, 0.0, f"test failed: {exc}")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        return_code = main()
+    except BaseException as exc:
+        # Last-resort guard for unexpected exceptions (including interrupts).
+        # Keep the evaluator contract even when the normal test path cannot
+        # return a result.
+        try:
+            write_result(False, 0.0, f"test failed: {exc}")
+        except BaseException:
+            pass
+        return_code = 1
+    sys.exit(return_code)
